@@ -1,24 +1,26 @@
 #include "graph.hpp"
 
 #include <queue>
+#include <ranges>
 
 void Graph::loadFromStream(std::istream &in) {
-    if (!(in >> verticesCount)) {
+    if (!(in >> verticesCount)) [[unlikely]] {
         throw std::runtime_error("Error reading the number of vertices");
     }
-    if (!(in >> edgesCount)) {
+    if (!(in >> edgesCount)) [[unlikely]] {
         throw std::runtime_error("Error reading the number of edges");
     }
     // Initialize the adjacency list.
     adjList.assign(verticesCount, std::vector<int>{});
 
-    // Read the edges.
-    for (int i = 0; i < edgesCount; ++i) {
+    // Use a range-based loop with std::views::iota.
+    for (int i : std::views::iota(0, edgesCount)) {
         int u, v;
-        if (!(in >> u >> v)) {
+        if (!(in >> u >> v)) [[unlikely]] {
             throw std::runtime_error("Error reading an edge");
         }
         if (u < 0 || u >= verticesCount || v < 0 || v >= verticesCount)
+            [[unlikely]]
             throw std::out_of_range("Incorrect vertex number");
         // The graph is undirected, so add an edge to both sides.
         adjList[u].push_back(v);
@@ -27,8 +29,8 @@ void Graph::loadFromStream(std::istream &in) {
 }
 
 std::vector<int> Graph::shortestDistances(int start) const {
-    if (start < 0 || start >= verticesCount) {
-        throw std::out_of_range("Неверный номер стартовой вершины");
+    if (start < 0 || start >= verticesCount) [[unlikely]] {
+        throw std::out_of_range("Invalid starting vertex number");
     }
 
     std::vector<int> distances(verticesCount,

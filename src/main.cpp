@@ -1,35 +1,42 @@
+#include <filesystem>
+#include <format>
 #include <fstream>
 #include <iostream>
+#include <print>
 
 #include "graph.hpp"
 
 int main(int argc, char *argv[]) {
     // Check command line arguments.
-    if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " <file_with_graph>\n";
+    if (argc < 2) [[unlikely]] {
+        std::print(stderr, "Usage: {} <file_with_graph>\n", argv[0]);
         return 1;
     }
 
     std::string filename = argv[1];
+    if (!std::filesystem::exists(filename)) [[unlikely]] {
+        std::print(stderr, "File '{}' does not exist.\n", filename);
+        return 1;
+    }
     std::ifstream file(filename);
-    if (!file) {
-        std::cerr << "Failed to open file: " << filename << "\n";
+    if (!file) [[unlikely]] {
+        std::print(stderr, "Failed to open file: {}\n", filename);
         return 1;
     }
 
     Graph graph;
     try {
-        // // Read first the information about the graph (vertices and edges).
+        // Read first the information about the graph (vertices and edges).
         graph.loadFromStream(file);
     } catch (const std::exception &e) {
-        std::cerr << "Error reading graph: " << e.what() << "\n";
+        std::print(stderr, "Error reading graph: {}\n", e.what());
         return 1;
     }
 
     // The last line of the file contains the number of the starting vertex.
     int startVertex;
-    if (!(file >> startVertex)) {
-        std::cerr << "Error reading a start vertex from a file.\n";
+    if (!(file >> startVertex)) [[unlikely]] {
+        std::print(stderr, "Error reading a start vertex from the file.\n");
         return 1;
     }
 
@@ -37,11 +44,11 @@ int main(int argc, char *argv[]) {
         auto distances = graph.shortestDistances(startVertex);
         // Output distances: for each vertex in ascending order of number.
         for (const auto &d : distances) {
-            std::cout << d << "\n";
+            std::print(stdout, "{}\n", d);
         }
     } catch (const std::exception &e) {
-        std::cerr << "Error when calculating shortest distances: " << e.what()
-                  << "\n";
+        std::print(stderr, "Error when calculating shortest distances: {}\n",
+                   e.what());
         return 1;
     }
 
