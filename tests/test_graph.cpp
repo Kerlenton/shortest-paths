@@ -12,7 +12,6 @@
 
 #include "graph.hpp"
 
-// Use std::string_view for a cleaner interface.
 std::vector<int> runGraphTest(std::string_view input, int start) {
     std::string s(input);
     std::istringstream ss(s);
