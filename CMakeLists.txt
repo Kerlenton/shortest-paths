@@ -5,5 +5,5 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Main executable file
-add_executable(shortest_paths src/main.cpp src/Graph.cpp)
+add_executable(shortest_paths src/main.cpp src/graph.cpp)
 target_include_directories(shortest_paths PRIVATE include)
