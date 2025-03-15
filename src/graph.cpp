@@ -1,4 +1,5 @@
 #include "graph.hpp"
+
 #include <queue>
 
 void Graph::loadFromStream(std::istream &in) {
@@ -17,7 +18,7 @@ void Graph::loadFromStream(std::istream &in) {
         if (!(in >> u >> v)) {
             throw std::runtime_error("Error reading an edge");
         }
-        if(u < 0 || u >= verticesCount || v < 0 || v >= verticesCount)
+        if (u < 0 || u >= verticesCount || v < 0 || v >= verticesCount)
             throw std::out_of_range("Incorrect vertex number");
         // The graph is undirected, so add an edge to both sides.
         adjList[u].push_back(v);
@@ -30,7 +31,8 @@ std::vector<int> Graph::shortestDistances(int start) const {
         throw std::out_of_range("Неверный номер стартовой вершины");
     }
 
-    std::vector<int> distances(verticesCount, -1); // -1 means that the vertex is not reached.
+    std::vector<int> distances(verticesCount,
+                               -1);  // -1 means that the vertex is not reached.
     std::queue<int> queue;
     distances[start] = 0;
     queue.push(start);
@@ -40,7 +42,7 @@ std::vector<int> Graph::shortestDistances(int start) const {
         queue.pop();
 
         for (int neighbor : adjList[current]) {
-            if (distances[neighbor] == -1) { // not visited.
+            if (distances[neighbor] == -1) {  // not visited.
                 distances[neighbor] = distances[current] + 1;
                 queue.push(neighbor);
             }

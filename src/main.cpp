@@ -1,8 +1,9 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
+
 #include "graph.hpp"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     // Check command line arguments.
     if (argc < 2) {
         std::cerr << "Usage: " << argv[0] << " <file_with_graph>\n";
@@ -24,22 +25,23 @@ int main(int argc, char* argv[]) {
         std::cerr << "Error reading graph: " << e.what() << "\n";
         return 1;
     }
-    
-    // The last line of the file contains the number of the starting vertex. 
+
+    // The last line of the file contains the number of the starting vertex.
     int startVertex;
     if (!(file >> startVertex)) {
         std::cerr << "Error reading a start vertex from a file.\n";
         return 1;
     }
-    
+
     try {
         auto distances = graph.shortestDistances(startVertex);
-        // Output distances: for each vertex in ascending order of number. 
+        // Output distances: for each vertex in ascending order of number.
         for (const auto &d : distances) {
             std::cout << d << "\n";
         }
     } catch (const std::exception &e) {
-        std::cerr << "Error when calculating shortest distances: " << e.what() << "\n";
+        std::cerr << "Error when calculating shortest distances: " << e.what()
+                  << "\n";
         return 1;
     }
 
