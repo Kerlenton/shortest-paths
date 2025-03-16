@@ -31,5 +31,5 @@ After building, you can run the main executable:
 
 To run the tests executable:
 ```
-./tests
+./generated_tests
 ```
