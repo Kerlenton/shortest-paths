@@ -27,16 +27,16 @@ After building, you can run the main executable:
 ./shortest_paths /path/to/graph.txt
 ```
 
-## Generate Test Data
-
-To generate the test data, run the generator from the project root:
-```
-./tools/generate_graphs.py
-```
-
 ## Run Tests
 
 To run the tests executable:
 ```
 ./generated_tests
+```
+
+## Generate Test Data
+
+To generate the test data, run the generator from the project root:
+```
+./tools/generate_graphs.py
 ```
