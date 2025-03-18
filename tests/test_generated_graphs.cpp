@@ -21,7 +21,7 @@ fs::path findTestGraphsDir() {
     return "";
 }
 
-// Function for searching the directory with answers by multiple relative paths.
+// Function for searching the directory with answers by several relative paths.
 fs::path findTestAnswersDir() {
     fs::path candidates[] = {"tests/answers", "../tests/answers",
                              "../../tests/answers"};

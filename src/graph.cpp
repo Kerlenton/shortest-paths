@@ -10,11 +10,10 @@ void Graph::loadFromStream(std::istream &in) {
     if (!(in >> edgesCount)) [[unlikely]] {
         throw std::runtime_error("Error reading the number of edges");
     }
+
     // Initialize the adjacency list.
     adjList.assign(verticesCount, std::vector<int>{});
-
-    // Use a range-based loop with std::views::iota.
-    for (int i : std::views::iota(0, edgesCount)) {
+    for ([[maybe_unused]] int i : std::views::iota(0, edgesCount)) {
         int u, v;
         if (!(in >> u >> v)) [[unlikely]] {
             throw std::runtime_error("Error reading an edge");
@@ -39,12 +38,13 @@ std::vector<int> Graph::shortestDistances(int start) const {
     distances[start] = 0;
     queue.push(start);
 
+    // BFS.
     while (!queue.empty()) {
         int current = queue.front();
         queue.pop();
 
         for (int neighbor : adjList[current]) {
-            if (distances[neighbor] == -1) {  // not visited.
+            if (distances[neighbor] == -1) {  // Not visited.
                 distances[neighbor] = distances[current] + 1;
                 queue.push(neighbor);
             }
