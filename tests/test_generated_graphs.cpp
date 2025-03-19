@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -8,28 +9,32 @@
 
 namespace fs = std::filesystem;
 
+// Magic constant for the prefix "graph_"
+constexpr size_t prefix_length = 6;
+
 // Function for searching a directory with graphs by several relative paths.
-fs::path findTestGraphsDir() {
+std::optional<fs::path> findTestGraphsDir() {
     fs::path candidates[] = {"tests/graphs", "../tests/graphs",
                              "../../tests/graphs"};
-    for (auto& candidate : candidates) {
+    for (const auto& candidate : candidates) {
         if (fs::exists(candidate) && fs::is_directory(candidate))
             return candidate;
     }
-    return "";
+    return std::nullopt;
 }
 
 // Function for searching the directory with answers by several relative paths.
-fs::path findTestAnswersDir() {
+std::optional<fs::path> findTestAnswersDir() {
     fs::path candidates[] = {"tests/answers", "../tests/answers",
                              "../../tests/answers"};
-    for (auto& candidate : candidates) {
+    for (const auto& candidate : candidates) {
         if (fs::exists(candidate) && fs::is_directory(candidate))
             return candidate;
     }
-    return "";
+    return std::nullopt;
 }
 
+// Function to read non-empty lines from a file.
 std::vector<std::string> read_lines(const fs::path& filepath) {
     std::vector<std::string> lines;
     std::ifstream file(filepath);
@@ -41,18 +46,21 @@ std::vector<std::string> read_lines(const fs::path& filepath) {
 }
 
 int main() {
-    fs::path graphsDir = findTestGraphsDir();
-    fs::path answersDir = findTestAnswersDir();
+    auto optGraphsDir = findTestGraphsDir();
+    auto optAnswersDir = findTestAnswersDir();
 
-    if (graphsDir.empty() || !fs::is_directory(graphsDir)) {
+    if (!optGraphsDir.has_value()) {
         std::cerr << "Test graphs directory not found.\n";
         return 1;
     }
-    if (answersDir.empty() || !fs::is_directory(answersDir)) {
+    if (!optAnswersDir.has_value()) {
         std::cerr << "Test answers directory not found.\n";
         return 1;
     }
+    fs::path graphsDir = optGraphsDir.value();
+    fs::path answersDir = optAnswersDir.value();
 
+    // Iterate through each file in the graphs directory.
     for (const auto& entry : fs::directory_iterator(graphsDir)) {
         if (entry.is_regular_file() &&
             entry.path().filename().string().find("graph_") == 0) {
@@ -60,7 +68,8 @@ int main() {
             // Define the name of the file with the expected answer: replace the
             // prefix "graph_" with "answer_".
             std::string graphFilename = graphFile.filename().string();
-            std::string answerFilename = "answer_" + graphFilename.substr(6);
+            std::string answerFilename =
+                "answer_" + graphFilename.substr(prefix_length);
             fs::path answerFile = answersDir / answerFilename;
             if (!fs::exists(answerFile)) {
                 std::cerr << "Expected answer file not found for " << graphFile
