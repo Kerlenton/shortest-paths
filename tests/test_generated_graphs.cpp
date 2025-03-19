@@ -10,10 +10,10 @@
 namespace fs = std::filesystem;
 
 // Magic constant for the prefix "graph_"
-constexpr size_t prefix_length = 6;
+constexpr size_t prefixLength = 6;
 
 // Function for searching a directory with graphs by several relative paths.
-std::optional<fs::path> findTestGraphsDir() {
+std::optional<fs::path> FindTestGraphsDir() {
     fs::path candidates[] = {"tests/graphs", "../tests/graphs",
                              "../../tests/graphs"};
     for (const auto& candidate : candidates) {
@@ -24,7 +24,7 @@ std::optional<fs::path> findTestGraphsDir() {
 }
 
 // Function for searching the directory with answers by several relative paths.
-std::optional<fs::path> findTestAnswersDir() {
+std::optional<fs::path> FindTestAnswersDir() {
     fs::path candidates[] = {"tests/answers", "../tests/answers",
                              "../../tests/answers"};
     for (const auto& candidate : candidates) {
@@ -35,7 +35,7 @@ std::optional<fs::path> findTestAnswersDir() {
 }
 
 // Function to read non-empty lines from a file.
-std::vector<std::string> read_lines(const fs::path& filepath) {
+std::vector<std::string> ReadLines(const fs::path& filepath) {
     std::vector<std::string> lines;
     std::ifstream file(filepath);
     std::string line;
@@ -46,8 +46,8 @@ std::vector<std::string> read_lines(const fs::path& filepath) {
 }
 
 int main() {
-    auto optGraphsDir = findTestGraphsDir();
-    auto optAnswersDir = findTestAnswersDir();
+    auto optGraphsDir = FindTestGraphsDir();
+    auto optAnswersDir = FindTestAnswersDir();
 
     if (!optGraphsDir.has_value()) {
         std::cerr << "Test graphs directory not found.\n";
@@ -69,7 +69,7 @@ int main() {
             // prefix "graph_" with "answer_".
             std::string graphFilename = graphFile.filename().string();
             std::string answerFilename =
-                "answer_" + graphFilename.substr(prefix_length);
+                "answer_" + graphFilename.substr(prefixLength);
             fs::path answerFile = answersDir / answerFilename;
             if (!fs::exists(answerFile)) {
                 std::cerr << "Expected answer file not found for " << graphFile
@@ -85,7 +85,7 @@ int main() {
             }
             Graph graph;
             try {
-                graph.loadFromStream(in);
+                graph.LoadFromStream(in);
             } catch (const std::exception& e) {
                 std::cerr << "Error reading graph from " << graphFile << ": "
                           << e.what() << "\n";
@@ -97,12 +97,12 @@ int main() {
                           << "\n";
                 return 1;
             }
-            auto distances = graph.shortestDistances(start);
+            auto distances = graph.ShortestDistances(start);
 
             // Read the expected response.
-            auto expected_lines = read_lines(answerFile);
+            auto expectedLines = ReadLines(answerFile);
             std::vector<int> expected;
-            for (const auto& line : expected_lines) {
+            for (const auto& line : expectedLines) {
                 expected.push_back(std::stoi(line));
             }
 

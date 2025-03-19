@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
     Graph graph;
     try {
         // Read first the information about the graph (vertices and edges).
-        graph.loadFromStream(file);
+        graph.LoadFromStream(file);
     } catch (const std::exception &e) {
         std::print(stderr, "Error reading graph: {}\n", e.what());
         return 1;
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     }
 
     try {
-        auto distances = graph.shortestDistances(startVertex);
+        auto distances = graph.ShortestDistances(startVertex);
         // Output distances: for each vertex in ascending order of number.
         for (const auto &d : distances) {
             std::print(stdout, "{}\n", d);
