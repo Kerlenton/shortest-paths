@@ -1,7 +1,6 @@
 #pragma once
 
 #include <istream>
-#include <stdexcept>
 #include <vector>
 
 class [[nodiscard]] Graph {

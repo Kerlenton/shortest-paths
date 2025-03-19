@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <ranges>
+#include <stdexcept>
 
 void Graph::loadFromStream(std::istream &in) {
     if (!(in >> verticesCount)) [[unlikely]] {
