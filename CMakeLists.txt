@@ -1,25 +1,44 @@
 cmake_minimum_required(VERSION 3.15)
 project(ShortestPaths CXX)
 
+# Use the C++23 standard.
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Common settings for all targets
-add_library(common_settings INTERFACE)
-target_compile_features(common_settings INTERFACE cxx_std_23)
-target_include_directories(common_settings INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+# Create a static library with grouped source files.
+add_library(shortest_paths_lib
+    src/core/graph.cpp
+    src/algorithms/breadth_first_search.cpp
+    src/algorithms/floyd_warshall.cpp
+    src/factories/graph_factory.cpp
+)
 
-# Main executable file
-add_executable(shortest_paths src/main.cpp src/graph.cpp)
-target_link_libraries(shortest_paths PRIVATE common_settings)
+# Add the include directories for public headers.
+target_include_directories(shortest_paths_lib
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/core
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/algorithms
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/factories
+)
 
-# Brute-force executable for verifying small graphs
-add_executable(graph_bruteforce src/graph_bruteforce.cpp)
-target_link_libraries(graph_bruteforce PRIVATE common_settings)
+# Main executable.
+add_executable(shortest_paths
+    src/main.cpp
+)
+target_link_libraries(shortest_paths PRIVATE shortest_paths_lib)
 
-# Generated tests using pre-generated graphs and answers
-add_executable(generated_tests tests/test_generated_graphs.cpp src/graph.cpp)
-target_link_libraries(generated_tests PRIVATE common_settings)
+# Test executable.
+add_executable(test_shortest_paths
+    tests/test_shortest_paths.cpp
+)
+target_link_libraries(test_shortest_paths PRIVATE shortest_paths_lib)
+
+# Benchmark executable.
+add_executable(benchmarks
+    benchmarks/benchmarks.cpp
+)
+target_link_libraries(benchmarks PRIVATE shortest_paths_lib)
 
 enable_testing()
-add_test(NAME GeneratedTests COMMAND generated_tests)
+add_test(NAME ShortestPathsTests COMMAND test_shortest_paths)

@@ -24,19 +24,19 @@ This project demonstrates the shortest paths calculation in a graph.
 
 After building, you can run the main executable:
 ```
-./shortest_paths /path/to/graph.txt
+./shortest_paths /path/to/graph.txt [bfs|floyd]
 ```
 
 ## Run Tests
 
 To run the tests executable:
 ```
-./generated_tests
+./test_shortest_paths
 ```
 
-## Generate Test Data
+## Run Benchmarks
 
-To generate the test data, run the generator from the project root:
+To run the tests executable:
 ```
-./tools/generate_graphs.py
+./benchmarks
 ```
