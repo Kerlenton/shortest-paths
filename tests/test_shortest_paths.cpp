@@ -20,7 +20,7 @@ void runTest(int n) {
     TGraph graph;
     graph.Load(iss);
     int startVertex;
-    iss >> startVertex;  // start vertex is read separately
+    iss >> startVertex;  // Start vertex is read separately.
 
     TBreadthFirstSearch bfs;
     TFloydWarshall floyd;

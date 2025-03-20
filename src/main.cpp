@@ -22,11 +22,13 @@ int main(int argc, char* argv[]) {
         printUsage(argv[0]);
         return 1;
     }
+
     std::string filename = argv[1];
     if (!std::filesystem::exists(filename)) {
         std::cerr << std::format("File does not exist: {}\n", filename);
         return 1;
     }
+
     std::ifstream in(filename);
     if (!in) {
         std::cerr << std::format("Failed to open file: {}\n", filename);
@@ -40,6 +42,7 @@ int main(int argc, char* argv[]) {
         std::cerr << std::format("Error loading graph: {}\n", e.what());
         return 1;
     }
+
     int startVertex;
     if (!(in >> startVertex)) {
         std::cerr << "Error reading start vertex.\n";

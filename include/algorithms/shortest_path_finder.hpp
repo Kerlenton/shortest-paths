@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "graph.hpp"  // теперь из include/core
+#include "graph.hpp"
 
 namespace NShortestPaths {
 

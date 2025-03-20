@@ -12,6 +12,7 @@ std::vector<std::pair<int, int>> GenerateTree(int n) {
     for (int i = 0; i < n; ++i) {
         vertices[i] = i;
     }
+
     // Use fixed seed for reproducibility.
     std::mt19937 g(42);
     std::shuffle(vertices.begin(), vertices.end(), g);
@@ -24,6 +25,7 @@ std::vector<std::pair<int, int>> GenerateTree(int n) {
         if (u > v) std::swap(u, v);
         edges.push_back({u, v});
     }
+
     return edges;
 }
 
@@ -35,6 +37,7 @@ std::string SerializeGraph(int n,
     for (const auto& edge : edges) {
         oss << edge.first << " " << edge.second << "\n";
     }
+
     return oss.str();
 }
 

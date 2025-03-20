@@ -9,7 +9,9 @@ namespace NShortestPaths {
 class TGraph {
    public:
     TGraph() = default;
+
     void Load(std::istream& in);
+
     [[nodiscard]] int VerticesCount() const noexcept { return VerticesCount_; }
     [[nodiscard]] const std::vector<std::vector<int>>& AdjacencyList()
         const noexcept {

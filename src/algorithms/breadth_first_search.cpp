@@ -11,6 +11,7 @@ std::vector<int> TBreadthFirstSearch::Compute(const TGraph& graph,
     if (start < 0 || start >= n) {
         throw std::out_of_range("Invalid starting vertex");
     }
+
     std::vector<int> distances(n, -1);
     std::queue<int> queue;
     distances[start] = 0;
@@ -25,6 +26,7 @@ std::vector<int> TBreadthFirstSearch::Compute(const TGraph& graph,
             }
         }
     }
+
     return distances;
 }
 
