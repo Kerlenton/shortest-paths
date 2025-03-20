@@ -1,5 +1,5 @@
 #include <chrono>
-#include <iostream>
+#include <print>
 #include <ratio>
 #include <sstream>
 #include <string>
@@ -13,14 +13,19 @@
 using namespace NShortestPaths;
 
 int main() {
-    std::cout << "Benchmarking BFS vs Floyd–Warshall algorithms\n";
-    std::cout << "Graph type: random tree\n";
-    std::cout << "Iterations per test: 3\n";
-    std::cout
-        << "---------------------------------------------------------------\n";
-    std::cout << "Size\tBFS (ms)\tFloyd–Warshall (ms)\tRatio (FW/BFS)\n";
-    std::cout
-        << "---------------------------------------------------------------\n";
+    std::print(stdout, "Benchmarking BFS vs Floyd–Warshall algorithms\n");
+    std::print(stdout, "Graph type: random tree\n");
+    std::print(stdout, "Iterations per test: 3\n");
+
+    // Print header with fixed column widths.
+    std::print(
+        stdout,
+        "---------------------------------------------------------------\n");
+    std::print(stdout, "{:>6} {:>12} {:>24} {:>16}\n", "Size", "BFS (ms)",
+               "Floyd–Warshall (ms)", "Ratio (FW/BFS)");
+    std::print(
+        stdout,
+        "---------------------------------------------------------------\n");
 
     std::vector<int> sizes = {100, 200, 300, 400, 500,
                               600, 700, 800, 900, 1000};
@@ -60,7 +65,7 @@ int main() {
         }
 
         if (bfsResult != floydResult) {
-            std::cerr << "Results mismatch for graph size " << n << "\n";
+            std::print(stderr, "Results mismatch for graph size {}\n", n);
             return 1;
         }
 
@@ -68,8 +73,9 @@ int main() {
         double avgFloyd = totalFloyd / iterations;
         double ratio = (avgBFS > 0) ? (avgFloyd / avgBFS) : 0;
 
-        std::cout << n << "\t" << avgBFS << "\t\t" << avgFloyd << "\t\t\t"
-                  << ratio << "\n";
+        // Use fixed-width formatting for output rows.
+        std::print(stdout, "{:6d} {:12.3f} {:24.3f} {:16.3f}\n", n, avgBFS,
+                   avgFloyd, ratio);
     }
 
     return 0;

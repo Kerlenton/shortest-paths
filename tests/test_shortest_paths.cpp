@@ -1,6 +1,6 @@
 #include <cassert>
 #include <exception>
-#include <iostream>
+#include <print>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -38,9 +38,9 @@ int main() {
         for (int n = 2; n <= 50; ++n) {
             runTest(n);
         }
-        std::cout << "All tests passed.\n";
+        std::print(stdout, "All tests passed.\n");
     } catch (const std::exception& e) {
-        std::cerr << "Test failed: " << e.what() << "\n";
+        std::print(stderr, "Test failed: {}\n", e.what());
         return 1;
     }
     return 0;

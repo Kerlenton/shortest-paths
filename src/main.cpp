@@ -1,9 +1,8 @@
 #include <exception>
 #include <filesystem>
-#include <format>
 #include <fstream>
-#include <iostream>
 #include <memory>
+#include <print>
 #include <string>
 #include <vector>
 
@@ -15,26 +14,26 @@
 using namespace NShortestPaths;
 
 // Prints usage information.
-void printUsage(const char* progName) {
-    std::cerr << std::format("Usage: {} <graph_file> [algorithm]\n", progName);
-    std::cerr << "  algorithm: bfs (default) or floyd\n";
+void PrintUsage(const char* progName) {
+    std::print(stderr, "Usage: {} <graph_file> [algorithm]\n", progName);
+    std::print(stderr, "  algorithm: bfs (default) or floyd\n");
 }
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        printUsage(argv[0]);
+        PrintUsage(argv[0]);
         return 1;
     }
 
     std::string filename = argv[1];
     if (!std::filesystem::exists(filename)) {
-        std::cerr << std::format("File does not exist: {}\n", filename);
+        std::print(stderr, "File does not exist: {}\n", filename);
         return 1;
     }
 
     std::ifstream in(filename);
     if (!in) {
-        std::cerr << std::format("Failed to open file: {}\n", filename);
+        std::print(stderr, "Failed to open file: {}\n", filename);
         return 1;
     }
 
@@ -42,13 +41,13 @@ int main(int argc, char* argv[]) {
     try {
         graph.Load(in);
     } catch (const std::exception& e) {
-        std::cerr << std::format("Error loading graph: {}\n", e.what());
+        std::print(stderr, "Error loading graph: {}\n", e.what());
         return 1;
     }
 
     int startVertex;
     if (!(in >> startVertex)) {
-        std::cerr << "Error reading start vertex.\n";
+        std::print(stderr, "Error reading start vertex.\n");
         return 1;
     }
 
@@ -59,19 +58,18 @@ int main(int argc, char* argv[]) {
     } else if (algoStr == "floyd") {
         algorithm = std::make_unique<TFloydWarshall>();
     } else {
-        std::cerr << std::format("Unknown algorithm: {}\n", algoStr);
-        printUsage(argv[0]);
+        std::print(stderr, "Unknown algorithm: {}\n", algoStr);
+        PrintUsage(argv[0]);
         return 1;
     }
 
     try {
         auto distances = algorithm->Compute(graph, startVertex);
         for (int d : distances) {
-            std::cout << std::format("{}\n", d);
+            std::print("{}\n", d);
         }
     } catch (const std::exception& e) {
-        std::cerr << std::format("Error computing shortest paths: {}\n",
-                                 e.what());
+        std::print(stderr, "Error computing shortest paths: {}\n", e.what());
         return 1;
     }
 
