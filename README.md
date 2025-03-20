@@ -1,4 +1,4 @@
-# shortest-paths
+d# shortest-paths
 
 This project demonstrates the shortest paths calculation in a graph.
 
@@ -26,12 +26,28 @@ After building, you can run the main executable:
 ```
 ./shortest_paths /path/to/graph.txt [bfs|floyd]
 ```
+If no algorithm is specified, BFS will be used by default.
+
+Examples:
+```
+./shortest_paths ../graph.txt
+```
+```
+./shortest_paths ../graph.txt bfs
+```
+```
+./shortest_paths ../graph.txt floyd
+```
 
 ## Run Tests
 
 To run the tests executable:
 ```
 ./test_shortest_paths
+```
+or
+```
+ctest
 ```
 
 ## Run Benchmarks
