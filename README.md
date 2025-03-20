@@ -1,4 +1,4 @@
-d# shortest-paths
+# shortest-paths
 
 This project demonstrates the shortest paths calculation in a graph.
 
