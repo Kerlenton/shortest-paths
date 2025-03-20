@@ -40,5 +40,7 @@ add_executable(benchmarks
 )
 target_link_libraries(benchmarks PRIVATE shortest_paths_lib)
 
+# Enable testing in CMake.
 enable_testing()
+# Register the test executable as a CTest test.
 add_test(NAME ShortestPathsTests COMMAND test_shortest_paths)
