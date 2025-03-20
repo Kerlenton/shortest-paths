@@ -1,6 +1,7 @@
 #pragma once
 
 #include <istream>
+#include <span>
 #include <vector>
 
 namespace NShortestPaths {
@@ -13,9 +14,9 @@ class TGraph {
     void Load(std::istream& in);
 
     [[nodiscard]] int VerticesCount() const noexcept { return VerticesCount_; }
-    [[nodiscard]] const std::vector<std::vector<int>>& AdjacencyList()
+    [[nodiscard]] std::span<const std::vector<int>> AdjacencyList()
         const noexcept {
-        return AdjList_;
+        return std::span(AdjList_);
     }
 
    private:

@@ -1,6 +1,9 @@
 #include <cassert>
+#include <exception>
 #include <iostream>
 #include <sstream>
+#include <string>
+#include <vector>
 
 #include "breadth_first_search.hpp"
 #include "floyd_warshall.hpp"

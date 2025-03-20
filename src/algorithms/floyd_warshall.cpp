@@ -1,6 +1,7 @@
 #include "floyd_warshall.hpp"
 
 #include <limits>
+#include <span>
 #include <stdexcept>
 #include <vector>
 
@@ -14,13 +15,13 @@ std::vector<int> TFloydWarshall::Compute(const TGraph& graph, int start) const {
         throw std::out_of_range("Invalid starting vertex");
     }
 
-    const int INF = std::numeric_limits<int>::max() / 2;
+    constexpr int INF = std::numeric_limits<int>::max() / 2;
     std::vector<std::vector<int>> dist(n, std::vector<int>(n, INF));
     for (int i = 0; i < n; ++i) {
         dist[i][i] = 0;
     }
 
-    const auto& adj = graph.AdjacencyList();
+    const auto adj = graph.AdjacencyList();
     for (int u = 0; u < n; ++u) {
         for (int v : adj[u]) {
             dist[u][v] = 1;

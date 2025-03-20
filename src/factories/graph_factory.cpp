@@ -34,8 +34,8 @@ std::string SerializeGraph(int n,
     std::ostringstream oss;
     oss << n << "\n";
     oss << edges.size() << "\n";
-    for (const auto& edge : edges) {
-        oss << edge.first << " " << edge.second << "\n";
+    for (const auto& [u, v] : edges) {
+        oss << u << " " << v << "\n";
     }
 
     return oss.str();

@@ -1,11 +1,14 @@
-#include "graph.hpp"
+#include <chrono>
+#include <iostream>
+#include <ratio>
+#include <sstream>
+#include <string>
+#include <vector>
+
 #include "breadth_first_search.hpp"
 #include "floyd_warshall.hpp"
+#include "graph.hpp"
 #include "graph_factory.hpp"
-#include <sstream>
-#include <iostream>
-#include <chrono>
-#include <vector>
 
 using namespace NShortestPaths;
 
@@ -13,16 +16,27 @@ int main() {
     std::cout << "Benchmarking BFS vs Floyd–Warshall algorithms\n";
     std::cout << "Graph type: random tree\n";
     std::cout << "Iterations per test: 3\n";
-    std::cout << "---------------------------------------------------------------\n";
+    std::cout
+        << "---------------------------------------------------------------\n";
     std::cout << "Size\tBFS (ms)\tFloyd–Warshall (ms)\tRatio (FW/BFS)\n";
-    std::cout << "---------------------------------------------------------------\n";
+    std::cout
+        << "---------------------------------------------------------------\n";
 
-    std::vector<int> sizes = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
-    const int iterations = 3;
+    std::vector<int> sizes = {100, 200, 300, 400, 500,
+                              600, 700, 800, 900, 1000};
+    constexpr int iterations = 3;
     int startVertex = 0;
 
     TBreadthFirstSearch bfs;
     TFloydWarshall floyd;
+
+    auto measure = [&](auto&& func) -> double {
+        auto startTime = std::chrono::steady_clock::now();
+        func();
+        auto endTime = std::chrono::steady_clock::now();
+        return std::chrono::duration<double, std::milli>(endTime - startTime)
+            .count();
+    };
 
     for (int n : sizes) {
         auto edges = NGraphFactory::GenerateTree(n);
@@ -39,15 +53,10 @@ int main() {
         std::vector<int> bfsResult, floydResult;
 
         for (int i = 0; i < iterations; ++i) {
-            auto startTime = std::chrono::steady_clock::now();
-            bfsResult = bfs.Compute(graph, startVertex);
-            auto endTime = std::chrono::steady_clock::now();
-            totalBFS += std::chrono::duration<double, std::milli>(endTime - startTime).count();
-
-            startTime = std::chrono::steady_clock::now();
-            floydResult = floyd.Compute(graph, startVertex);
-            endTime = std::chrono::steady_clock::now();
-            totalFloyd += std::chrono::duration<double, std::milli>(endTime - startTime).count();
+            totalBFS +=
+                measure([&] { bfsResult = bfs.Compute(graph, startVertex); });
+            totalFloyd += measure(
+                [&] { floydResult = floyd.Compute(graph, startVertex); });
         }
 
         if (bfsResult != floydResult) {
@@ -59,7 +68,8 @@ int main() {
         double avgFloyd = totalFloyd / iterations;
         double ratio = (avgBFS > 0) ? (avgFloyd / avgBFS) : 0;
 
-        std::cout << n << "\t" << avgBFS << "\t\t" << avgFloyd << "\t\t\t" << ratio << "\n";
+        std::cout << n << "\t" << avgBFS << "\t\t" << avgFloyd << "\t\t\t"
+                  << ratio << "\n";
     }
 
     return 0;

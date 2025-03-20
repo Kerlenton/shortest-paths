@@ -1,7 +1,11 @@
 #include "breadth_first_search.hpp"
 
 #include <queue>
+#include <span>
 #include <stdexcept>
+#include <vector>
+
+#include "graph.hpp"
 
 namespace NShortestPaths {
 

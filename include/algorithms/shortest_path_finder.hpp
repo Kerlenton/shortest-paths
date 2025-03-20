@@ -8,7 +8,8 @@ namespace NShortestPaths {
 
 class IShortestPathFinder {
    public:
-    virtual std::vector<int> Compute(const TGraph& graph, int start) const = 0;
+    [[nodiscard]] virtual std::vector<int> Compute(const TGraph& graph,
+                                                   int start) const = 0;
     virtual ~IShortestPathFinder() = default;
 };
 
