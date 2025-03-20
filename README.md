@@ -24,19 +24,25 @@ This project demonstrates the shortest paths calculation in a graph.
 
 After building, you can run the main executable:
 ```
-./shortest_paths /path/to/graph.txt [bfs|floyd]
+./shortest_paths /path/to/graph.txt [bfs-seq|bfs-par|floyd-seq|floyd-par]
 ```
-If no algorithm is specified, BFS will be used by default.
+If no algorithm is specified, sequential BFS will be used by default.
 
 Examples:
 ```
 ./shortest_paths ../graph.txt
 ```
 ```
-./shortest_paths ../graph.txt bfs
+./shortest_paths ../graph.txt bfs-seq
 ```
 ```
-./shortest_paths ../graph.txt floyd
+./shortest_paths ../graph.txt bfs-par
+```
+```
+./shortest_paths ../graph.txt floyd-seq
+```
+```
+./shortest_paths ../graph.txt floyd-par
 ```
 
 ## Run Tests

@@ -6,7 +6,9 @@
 #include <vector>
 
 #include "breadth_first_search.hpp"
+#include "breadth_first_search_parallel.hpp"
 #include "floyd_warshall.hpp"
+#include "floyd_warshall_parallel.hpp"
 #include "graph.hpp"
 #include "graph_factory.hpp"
 
@@ -24,23 +26,28 @@ void runTest(int n) {
     // Create an input stream from the graph data.
     std::istringstream iss(graphData);
     TGraph graph;
-    // Load the graph from the input stream.
+    // Load the graph.
     graph.Load(iss);
     int startVertex;
     // Read the start vertex separately.
     iss >> startVertex;
 
-    // Create a BFS algorithm instance.
-    TBreadthFirstSearch bfs;
-    // Create a Floyd–Warshall algorithm instance.
-    TFloydWarshall floyd;
-    // Compute distances using BFS.
-    auto bfsResult = bfs.Compute(graph, startVertex);
-    // Compute distances using Floyd–Warshall.
-    auto floydResult = floyd.Compute(graph, startVertex);
+    // Create algorithm instances.
+    TBreadthFirstSearch bfs_seq;
+    TBreadthFirstSearchParallel bfs_par;
+    TFloydWarshall floyd_seq;
+    TFloydWarshallParallel floyd_par;
 
-    // Assert that both algorithms produce the same result.
-    assert(bfsResult == floydResult);
+    // Compute distances using both sequential and parallel algorithms.
+    auto bfsResultSeq = bfs_seq.Compute(graph, startVertex);
+    auto bfsResultPar = bfs_par.Compute(graph, startVertex);
+    auto floydResultSeq = floyd_seq.Compute(graph, startVertex);
+    auto floydResultPar = floyd_par.Compute(graph, startVertex);
+
+    // Assert that all algorithms produce the same result.
+    assert(bfsResultSeq == bfsResultPar);
+    assert(bfsResultSeq == floydResultSeq);
+    assert(bfsResultSeq == floydResultPar);
 }
 
 int main() {

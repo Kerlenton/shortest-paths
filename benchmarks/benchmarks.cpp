@@ -6,7 +6,9 @@
 #include <vector>
 
 #include "breadth_first_search.hpp"
+#include "breadth_first_search_parallel.hpp"
 #include "floyd_warshall.hpp"
+#include "floyd_warshall_parallel.hpp"
 #include "graph.hpp"
 #include "graph_factory.hpp"
 
@@ -14,16 +16,14 @@ using namespace NShortestPaths;
 
 int main() {
     // Print introductory information for the benchmark.
-    std::print(stdout, "Benchmarking BFS vs Floyd–Warshall algorithms\n");
-    std::print(stdout, "Graph type: random tree\n");
-    std::print(stdout, "Iterations per test: 3\n");
-
-    // Print a header with fixed column widths for the benchmark results.
+    std::print(stdout, "Benchmarking Algorithms (Sequential and Parallel).\n");
+    std::print(stdout, "Graph type: random tree.\n");
+    std::print(stdout, "Iterations per test: 3.\n");
     std::print(
         stdout,
         "---------------------------------------------------------------\n");
-    std::print(stdout, "{:>6} {:>12} {:>24} {:>16}\n", "Size", "BFS (ms)",
-               "Floyd–Warshall (ms)", "Ratio (FW/BFS)");
+    std::print(stdout, "{:>6} {:>12} {:>12} {:>12} {:>12}\n", "Size", "BFS_seq",
+               "BFS_par", "Floyd_seq", "Floyd_par");
     std::print(
         stdout,
         "---------------------------------------------------------------\n");
@@ -36,12 +36,13 @@ int main() {
     // The starting vertex for path computation.
     int startVertex = 0;
 
-    // Instance of the BFS algorithm.
-    TBreadthFirstSearch bfs;
-    // Instance of the Floyd–Warshall algorithm.
-    TFloydWarshall floyd;
+    // Create algorithm instances.
+    TBreadthFirstSearch bfsSeq;
+    TBreadthFirstSearchParallel bfsPar;
+    TFloydWarshall floydSeq;
+    TFloydWarshallParallel floydPar;
 
-    // Lambda function to measure the execution time of a function.
+    // Lambda function to measure execution time.
     auto measure = [&](auto&& func) -> double {
         auto startTime = std::chrono::steady_clock::now();
         func();
@@ -65,33 +66,39 @@ int main() {
         // Load the graph.
         graph.Load(iss);
 
-        double totalBFS = 0.0;
-        double totalFloyd = 0.0;
-        std::vector<int> bfsResult, floydResult;
+        double totalBFSSeq = 0.0, totalBFSPar = 0.0;
+        double totalFloydSeq = 0.0, totalFloydPar = 0.0;
+        std::vector<int> resultBFSSeq, resultBFSPar, resultFloydSeq,
+            resultFloydPar;
 
-        // Measure the execution time for both algorithms over several
-        // iterations.
+        // Measure execution time for all algorithms.
         for (int i = 0; i < iterations; ++i) {
-            totalBFS +=
-                measure([&] { bfsResult = bfs.Compute(graph, startVertex); });
-            totalFloyd += measure(
-                [&] { floydResult = floyd.Compute(graph, startVertex); });
+            totalBFSSeq += measure(
+                [&] { resultBFSSeq = bfsSeq.Compute(graph, startVertex); });
+            totalBFSPar += measure(
+                [&] { resultBFSPar = bfsPar.Compute(graph, startVertex); });
+            totalFloydSeq += measure(
+                [&] { resultFloydSeq = floydSeq.Compute(graph, startVertex); });
+            totalFloydPar += measure(
+                [&] { resultFloydPar = floydPar.Compute(graph, startVertex); });
         }
 
-        // Check that both algorithms produced the same result.
-        if (bfsResult != floydResult) {
+        // Check that all algorithms produced the same result.
+        if (resultBFSSeq != resultBFSPar || resultBFSSeq != resultFloydSeq ||
+            resultBFSSeq != resultFloydPar) {
             std::print(stderr, "Results mismatch for graph size {}\n", n);
             return 1;
         }
 
-        // Calculate the average execution time and the ratio.
-        double avgBFS = totalBFS / iterations;
-        double avgFloyd = totalFloyd / iterations;
-        double ratio = (avgBFS > 0) ? (avgFloyd / avgBFS) : 0;
+        // Calculate average execution times.
+        double avgBFSSeq = totalBFSSeq / iterations;
+        double avgBFSPar = totalBFSPar / iterations;
+        double avgFloydSeq = totalFloydSeq / iterations;
+        double avgFloydPar = totalFloydPar / iterations;
 
-        // Print the benchmark results in a formatted manner.
-        std::print(stdout, "{:6d} {:12.3f} {:24.3f} {:16.3f}\n", n, avgBFS,
-                   avgFloyd, ratio);
+        // Print benchmark results.
+        std::print(stdout, "{:6d} {:12.3f} {:12.3f} {:12.3f} {:12.3f}\n", n,
+                   avgBFSSeq, avgBFSPar, avgFloydSeq, avgFloydPar);
     }
 
     return 0;

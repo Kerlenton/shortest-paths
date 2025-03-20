@@ -11,6 +11,8 @@ add_library(shortest_paths_lib
     src/core/graph.cpp
     src/algorithms/breadth_first_search.cpp
     src/algorithms/floyd_warshall.cpp
+    src/algorithms/breadth_first_search_parallel.cpp
+    src/algorithms/floyd_warshall_parallel.cpp
     src/factories/graph_factory.cpp
 )
 
