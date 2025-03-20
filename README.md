@@ -52,7 +52,7 @@ ctest
 
 ## Run Benchmarks
 
-To run the tests executable:
+To run the benchmarks executable:
 ```
 ./benchmarks
 ```
